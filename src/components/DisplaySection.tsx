@@ -72,7 +72,7 @@ export default function DisplaySection() {
   const imageSrc = `/frames/ezgif-frame-${frameStr}.jpg`;
 
   return (
-    <section ref={ref} className="relative py-32 bg-gradient-to-b from-[#0a0a14] to-black overflow-hidden flex flex-col md:flex-row items-center justify-center px-8 gap-16 perspective-[2000px]">
+    <section id="design" ref={ref} className="relative py-32 bg-gradient-to-b from-[#0a0a14] to-black overflow-hidden flex flex-col md:flex-row items-center justify-center px-8 gap-16 perspective-[2000px]">
 
       {/* 3D Interactive Container */}
       <motion.div

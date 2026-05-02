@@ -17,7 +17,7 @@ export default function M3DeepDive() {
   ];
 
   return (
-    <section className="relative py-32 bg-[#101014] overflow-hidden flex justify-center">
+    <section id="features" className="relative py-32 bg-[#101014] overflow-hidden flex justify-center">
       {/* Background Gradient Fade Divider */}
       <div className="absolute top-0 left-0 w-full h-[100px] bg-gradient-to-b from-black to-transparent pointer-events-none" />
       

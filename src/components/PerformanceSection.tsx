@@ -62,7 +62,7 @@ export default function PerformanceSection() {
         </div>
 
         {/* Headline */}
-        <h2 className="text-[40px] md:text-[80px] font-bold text-white leading-tight tracking-tight mb-4">
+        <h2 className="text-[32px] md:text-[48px] font-bold text-white leading-tight tracking-tight mb-4">
           Game-changing performance.
         </h2>
         <p className="text-xl md:text-2xl text-[#86868b] font-medium mb-16">

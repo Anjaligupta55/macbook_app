@@ -6,11 +6,11 @@ import Link from 'next/link';
 import { Apple } from 'lucide-react';
 
 const navLinks = [
-  { name: 'Overview', href: '#overview' },
-  { name: 'Features', href: '#features' },
-  { name: 'Design', href: '#design' },
-  { name: 'Tech Specs', href: '#specs' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Overview', href: '/#overview' },
+  { name: 'Features', href: '/#features' },
+  { name: 'Design', href: '/#design' },
+  { name: 'Tech Specs', href: '/#specs' },
+  { name: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {

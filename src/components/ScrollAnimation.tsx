@@ -8,37 +8,36 @@ export default function ScrollAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [progress, setProgress] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   // Preload images
   useEffect(() => {
     const loadedImages: HTMLImageElement[] = [];
-    let loadedCount = 0;
 
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
       const frameNum = String(i).padStart(3, '0');
       img.src = `/frames/ezgif-frame-${frameNum}.jpg`;
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === TOTAL_FRAMES) {
-          setImages(loadedImages);
-          setIsLoaded(true);
-          // draw first frame immediately upon load
+      
+      if (i === 1) {
+        img.onload = () => {
           if (canvasRef.current) {
             const ctx = canvasRef.current.getContext('2d');
             if (ctx) {
               ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-              drawScaledImage(ctx, loadedImages[0], canvasRef.current);
+              drawScaledImage(ctx, img, canvasRef.current);
             }
           }
-        }
-      };
+        };
+      }
+      
       loadedImages.push(img);
     }
+    
+    setImages(loadedImages);
   }, []);
 
   const drawScaledImage = (ctx: CanvasRenderingContext2D, img: HTMLImageElement, canvas: HTMLCanvasElement) => {
+    if (!img.complete || img.naturalWidth === 0) return;
     const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
     const x = (canvas.width / 2) - (img.width / 2) * scale;
     const y = (canvas.height / 2) - (img.height / 2) * scale;
@@ -80,8 +79,11 @@ export default function ScrollAnimation() {
 
           const ctx = canvasRef.current.getContext('2d');
           if (ctx && images[frameIndex]) {
-            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            drawScaledImage(ctx, images[frameIndex], canvasRef.current);
+            const imgToDraw = images[frameIndex];
+            if (imgToDraw.complete && imgToDraw.naturalWidth > 0) {
+              ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+              drawScaledImage(ctx, imgToDraw, canvasRef.current);
+            }
           }
         }
       }
@@ -111,7 +113,10 @@ export default function ScrollAnimation() {
           const frameIndex = Math.min(TOTAL_FRAMES - 1, Math.floor(progress * TOTAL_FRAMES));
           const ctx = canvasRef.current.getContext('2d');
           if (ctx && images[frameIndex]) {
-            drawScaledImage(ctx, images[frameIndex], canvasRef.current);
+            const imgToDraw = images[frameIndex];
+            if (imgToDraw.complete && imgToDraw.naturalWidth > 0) {
+              drawScaledImage(ctx, imgToDraw, canvasRef.current);
+            }
           }
         }
       }
@@ -122,13 +127,9 @@ export default function ScrollAnimation() {
   }, [images, progress]);
 
   return (
-    <section ref={containerRef} className="relative h-[800vh] bg-black">
+    <section id="overview" ref={containerRef} className="relative h-[800vh] bg-black">
       <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center">
-        {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
-            <div className="text-white text-xl animate-pulse">Loading frames...</div>
-          </div>
-        )}
+        {/* Loading screen removed for instant display */}
         <canvas
           ref={canvasRef}
           className="w-full h-full object-cover z-0 opacity-100"

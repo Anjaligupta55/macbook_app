@@ -15,7 +15,7 @@ export default function MemoryBandwidth() {
   ];
 
   return (
-    <section className="relative py-32 bg-[#000000] overflow-hidden flex flex-col items-center">
+    <section id="specs" className="relative py-32 bg-[#000000] overflow-hidden flex flex-col items-center">
       <motion.div 
         ref={ref}
         initial={{ opacity: 0, y: 60 }}

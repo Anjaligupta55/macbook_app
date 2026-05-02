@@ -25,7 +25,7 @@ const finishes: Finish[] = [
     textColor: '#f5f5f7',
     glowColor: 'rgba(100,100,120,0.35)',
     tagline: 'A bold new finish. Remarkably black.',
-    imageSrc: '/frames/ezgif-frame-001.jpg'
+    imageSrc: '/color/black_mac.jpeg'
   },
   {
     name: 'Silver',
@@ -36,7 +36,7 @@ const finishes: Finish[] = [
     textColor: '#1d1d1f',
     glowColor: 'rgba(200,200,210,0.5)',
     tagline: 'Classic. Timeless. Unmistakably Mac.',
-    imageSrc: '/frames/ezgif-frame-001.jpg'
+    imageSrc: '/color/silverr_mac.jpeg'
   },
   {
     name: 'Space Gray',
@@ -47,7 +47,7 @@ const finishes: Finish[] = [
     textColor: '#f5f5f7',
     glowColor: 'rgba(110,110,130,0.4)',
     tagline: 'Refined. Understated. Enduring.',
-    imageSrc: '/frames/ezgif-frame-001.jpg'
+    imageSrc: '/color/space_grey_mac.jpeg'
   },
   {
     name: 'Gold',
@@ -58,7 +58,7 @@ const finishes: Finish[] = [
     textColor: '#f5f5f7',
     glowColor: 'rgba(200,160,80,0.3)',
     tagline: 'Warm, radiant, and uniquely you.',
-    imageSrc: '/frames/ezgif-frame-001.jpg'
+    imageSrc: '/color/gold_mac.jpeg'
   },
   {
     name: 'Midnight',
@@ -69,7 +69,7 @@ const finishes: Finish[] = [
     textColor: '#f5f5f7',
     glowColor: 'rgba(60,60,180,0.35)',
     tagline: 'Deep. Dramatic. Distinctly different.',
-    imageSrc: '/frames/ezgif-frame-001.jpg'
+    imageSrc: '/color/midnight_mac.jpeg'
   }
 ];
 
@@ -81,12 +81,7 @@ export default function ColorStage() {
     offset: ["start start", "end end"]
   });
 
-  // Background color seamlessly interpolates on scroll
-  const backgroundColor = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    finishes.map(f => f.bg)
-  );
+  // Background fixed to black
 
   useEffect(() => {
     finishes.forEach(f => { const img = new Image(); img.src = f.imageSrc; });
@@ -135,56 +130,45 @@ export default function ColorStage() {
 
   return (
     <div ref={containerRef} className="relative w-full" style={{ height: '500vh' }}>
-      <motion.div 
-        className="sticky top-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center pt-24 pb-12"
-        style={{ backgroundColor }}
+      <div 
+        className="sticky top-0 w-full h-screen bg-black overflow-hidden flex flex-col items-center justify-center pt-24 pb-12"
       >
         
         {/* Header Text */}
         <div className="text-center z-20 px-4">
-          <h2 
-            className="text-[40px] md:text-[64px] font-bold tracking-tight"
-            style={{ color: activeFinish.textColor, transition: 'color 0.8s ease' }}
-          >
+          <h2 className="text-[40px] md:text-[64px] font-bold tracking-tight text-white">
             Choose your finish.
           </h2>
-          <p 
-            className="text-[19px] mt-2 font-medium"
-            style={{ 
-              color: activeFinish.textColor === '#f5f5f7' ? 'rgba(255,255,255,0.6)' : '#6e6e73',
-              transition: 'color 0.8s ease'
-            }}
-          >
+          <p className="text-[19px] mt-2 font-medium text-white/60">
             Available in 5 stunning colors.
           </p>
         </div>
 
         {/* MacBook Images Crossfade Container */}
         <div className="relative w-full max-w-[680px] h-[250px] md:h-[400px] mt-8 mb-4 z-10 pointer-events-none" style={{ perspective: '1000px' }}>
-          {finishes.map((finish, i) => (
-            <div 
-              key={finish.name}
-              className="absolute inset-0 flex items-center justify-center will-change-transform will-change-opacity transition-all duration-[600ms]"
-              style={{
-                opacity: activeIndex === i ? 1 : 0,
-                transform: activeIndex === i ? 'scale(1)' : 'scale(1.02)',
-                transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
-              }}
-            >
-              <div className="relative w-[90%] md:w-full h-full flex justify-center items-center">
-                <img 
-                  src={finish.imageSrc} 
-                  alt={finish.name}
-                  className="w-full h-full object-contain mix-blend-lighten drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
-                />
-                {/* CSS Fallback Color Overlay */}
-                <div 
-                  className="absolute inset-0 w-full h-full mix-blend-color opacity-60 rounded-xl"
-                  style={{ background: finish.swatch }}
-                />
-              </div>
-            </div>
-          ))}
+          <AnimatePresence>
+            {finishes.map((finish, i) => (
+              activeIndex === i && (
+                <motion.div 
+                  key={finish.name}
+                  initial={{ opacity: 0, scale: 0.9, y: 30, rotateX: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
+                  exit={{ opacity: 0, scale: 1.05, y: -20, rotateX: -5 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 20, duration: 0.8 }}
+                  className="absolute inset-0 flex items-center justify-center will-change-transform will-change-opacity"
+                  style={{ perspective: '1200px' }}
+                >
+                  <div className="relative w-[90%] md:w-full h-full flex justify-center items-center">
+                    <img 
+                      src={finish.imageSrc} 
+                      alt={finish.name}
+                      className="w-full h-full object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)] rounded-xl"
+                    />
+                  </div>
+                </motion.div>
+              )
+            ))}
+          </AnimatePresence>
 
           {/* Ambient Glow */}
           <div 
@@ -201,10 +185,7 @@ export default function ColorStage() {
         <div className="h-24 flex flex-col items-center justify-center z-20 mb-6 text-center">
           <AnimatePresence mode="wait">
             <motion.div key={activeIndex} className="flex flex-col items-center">
-              <div 
-                className="text-[24px] md:text-[28px] font-semibold tracking-tight"
-                style={{ color: activeFinish.textColor }}
-              >
+              <div className="text-[24px] md:text-[28px] font-semibold tracking-tight text-white">
                 {activeFinish.name.split('').map((char, index) => (
                   <motion.span
                     key={`${activeIndex}-${index}`}
@@ -220,8 +201,7 @@ export default function ColorStage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
-                className="text-[15px] md:text-[17px] mt-[6px] font-medium hidden sm:block"
-                style={{ color: activeFinish.textColor, opacity: 0.6 }}
+                className="text-[15px] md:text-[17px] mt-[6px] font-medium hidden sm:block text-white/60"
               >
                 {activeFinish.tagline}
               </motion.div>
@@ -247,7 +227,7 @@ export default function ColorStage() {
                   background: finish.swatch,
                   border: `1.5px solid ${finish.swatchBorder}`,
                   boxShadow: isSelected 
-                    ? `0 0 0 2px ${activeFinish.bg}, 0 0 0 4px ${activeFinish.textColor === '#1d1d1f' ? '#a1a1aa' : 'white'}` 
+                    ? `0 0 0 2px black, 0 0 0 4px white` 
                     : 'none',
                   transform: 'scale(1)'
                 }}
@@ -265,15 +245,14 @@ export default function ColorStage() {
         {/* Scroll Progress Indicator */}
         <div className="w-[120px] h-[2px] bg-white/20 rounded-sm z-20 overflow-hidden relative">
           <motion.div 
-            className="h-full rounded-sm absolute left-0 top-0"
+            className="h-full rounded-sm absolute left-0 top-0 bg-white"
             style={{ 
-              width: useTransform(scrollYProgress, [0, 1], ['0%', '100%']),
-              backgroundColor: activeFinish.textColor === '#1d1d1f' ? '#1d1d1f' : 'white'
+              width: useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
             }}
           />
         </div>
 
-      </motion.div>
+      </div>
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes glowPulse {
           0%, 100% { opacity: 0.6; transform: translateX(-50%) scaleX(1); }
