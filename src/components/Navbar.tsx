@@ -31,7 +31,7 @@ export default function Navbar() {
             <Link 
               key={item.name}
               href={item.href}
-              className="relative px-5 py-2 rounded-full outline-none group"
+              className="relative px-3 md:px-5 py-2 rounded-full outline-none group"
               onMouseEnter={() => setHoveredIndex(index)}
             >
               {hoveredIndex === index && (
@@ -46,7 +46,7 @@ export default function Navbar() {
                 />
               )}
               <span 
-                className={`relative z-10 flex items-center gap-1 text-[14px] font-medium transition-colors tracking-tight ${
+                className={`relative z-10 flex items-center gap-1 text-[12px] md:text-[14px] font-medium transition-colors tracking-tight ${
                   hoveredIndex === index ? 'text-white' : 'text-[#333333]'
                 }`}
               >

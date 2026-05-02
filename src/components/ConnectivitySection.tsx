@@ -1,74 +1,117 @@
 'use client';
-import { useRef, useState } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { Monitor, Zap, HardDrive, BatteryCharging, Headphones } from 'lucide-react';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { BatteryCharging, Monitor, Tv, Camera } from 'lucide-react';
 
 export default function ConnectivitySection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [hoveredPort, setHoveredPort] = useState<number | null>(null);
+  const { ref, inView } = useInView({ threshold: 0.2, triggerOnce: true });
+  const [hoveredPort, setHoveredPort] = useState<string | null>(null);
 
-  const ports = [
-    { id: 1, name: 'MagSafe 3', icon: BatteryCharging, desc: 'Fast charging', x: '10%' },
-    { id: 2, name: 'Thunderbolt 4', icon: Zap, desc: 'Up to 40Gb/s', x: '30%' },
-    { id: 3, name: '3.5mm Jack', icon: Headphones, desc: 'Advanced audio', x: '50%' },
-    { id: 4, name: 'SDXC', icon: HardDrive, desc: 'Fast media transfer', x: '70%' },
-    { id: 5, name: 'HDMI', icon: Monitor, desc: 'Up to 8K output', x: '90%' },
+  const features = [
+    { icon: <BatteryCharging size={28} className="text-[#0071e3]" />, title: 'MagSafe 3', desc: 'Fast charge to 50% in 30 mins' },
+    { icon: <Monitor size={28} className="text-[#0071e3]" />, title: 'Thunderbolt 4', desc: 'Up to 40Gb/s data. Supports 8K.' },
+    { icon: <Tv size={28} className="text-[#0071e3]" />, title: 'HDMI 2.1', desc: 'Up to 8K at 60Hz or 4K at 240Hz' },
+    { icon: <Camera size={28} className="text-[#0071e3]" />, title: 'SDXC Card Slot', desc: 'UHS-II speeds. Perfect for pros.' },
   ];
 
   return (
-    <section id="support" ref={ref} className="py-32 bg-[#000] flex flex-col items-center px-6 relative">
-      <motion.div
-        initial={{ y: 50, opacity: 0 }}
-        animate={isInView ? { y: 0, opacity: 1 } : {}}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-24 z-10"
+    <section className="relative py-32 bg-[#0a0a0c] overflow-hidden flex flex-col items-center">
+      <motion.div 
+        ref={ref}
+        initial={{ opacity: 0, y: 60 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-[1000px] px-6"
       >
-        <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">Connections that matter.</h2>
-        <p className="text-xl text-gray-400">The most powerful port array ever in a Mac.</p>
-      </motion.div>
+        <h2 className="text-[40px] md:text-[60px] font-bold text-white text-center leading-tight tracking-tight mb-20">
+          Pro connectivity.<br/>Everywhere you go.
+        </h2>
 
-      <div className="relative w-full max-w-4xl h-40 border-b-4 border-gray-800 rounded-b-3xl bg-gradient-to-b from-transparent to-gray-900/30 flex items-end justify-between px-10 pb-4">
-        {ports.map((port, i) => {
-          const Icon = port.icon;
-          return (
-            <motion.div
-              key={port.id}
-              initial={{ y: 20, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.5 + (i * 0.1) }}
-              className="relative"
-              onMouseEnter={() => setHoveredPort(port.id)}
-              onMouseLeave={() => setHoveredPort(null)}
+        {/* MacBook Diagram */}
+        <div className="relative w-full h-[200px] md:h-[300px] mb-24 flex items-center justify-center">
+          {/* Base SVG Representation */}
+          <div className="w-[80%] h-4 bg-[#1d1d1f] rounded-full relative shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-[#333]">
+            {/* Left Ports */}
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex gap-4">
+              <div 
+                className="w-6 h-2 bg-black rounded-sm cursor-pointer hover:bg-[#333] transition-colors"
+                onMouseEnter={() => setHoveredPort('MagSafe')}
+                onMouseLeave={() => setHoveredPort(null)}
+              />
+              <div 
+                className="w-5 h-2 bg-black rounded-sm cursor-pointer hover:bg-[#333] transition-colors"
+                onMouseEnter={() => setHoveredPort('Thunderbolt Left 1')}
+                onMouseLeave={() => setHoveredPort(null)}
+              />
+              <div 
+                className="w-5 h-2 bg-black rounded-sm cursor-pointer hover:bg-[#333] transition-colors"
+                onMouseEnter={() => setHoveredPort('Thunderbolt Left 2')}
+                onMouseLeave={() => setHoveredPort(null)}
+              />
+              <div className="w-2 h-2 rounded-full bg-black ml-2" title="3.5mm Headphone Jack"/>
+            </div>
+
+            {/* Right Ports */}
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-4">
+              <div className="w-8 h-1 bg-black rounded-sm" title="SDXC Slot"/>
+              <div className="w-6 h-2 bg-black rounded-sm" title="Thunderbolt 4"/>
+              <div className="w-6 h-2 bg-black rounded-sm" title="HDMI"/>
+            </div>
+            
+            {/* Tooltip Card */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={hoveredPort ? { opacity: 1, y: -40, scale: 1 } : { opacity: 0, y: 10, scale: 0.9 }}
+              className="absolute left-10 -top-16 bg-white text-black px-4 py-2 rounded-xl shadow-2xl font-medium text-sm pointer-events-none z-20"
             >
-              {/* Port physical representation */}
-              <div className="w-12 h-4 bg-black border border-gray-700 rounded-sm cursor-pointer hover:border-gray-500 transition-colors shadow-inner" />
-              
-              <AnimatePresence>
-                {hoveredPort === port.id && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: -20, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-48 bg-gray-900/90 backdrop-blur-md border border-gray-700 p-4 rounded-xl shadow-2xl z-20 pointer-events-none"
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-blue-500/20 text-blue-400 rounded-lg">
-                        <Icon size={20} />
-                      </div>
-                      <div className="font-semibold text-white">{port.name}</div>
-                    </div>
-                    <div className="text-sm text-gray-400">{port.desc}</div>
-                    
-                    {/* Tooltip triangle */}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-8 border-transparent border-t-gray-900/90" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {hoveredPort}
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45" />
             </motion.div>
-          );
-        })}
-      </div>
+          </div>
+          
+          {/* Decorative Labels flying in */}
+          {inView && (
+            <>
+              <motion.div 
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ type: 'spring', delay: 0.5 }}
+                className="absolute left-0 -top-10 text-[#86868b] text-sm"
+              >
+                MagSafe 3 &bull; Thunderbolt 4 (x2) &bull; 3.5mm
+              </motion.div>
+              <motion.div 
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ type: 'spring', delay: 0.6 }}
+                className="absolute right-0 -top-10 text-[#86868b] text-sm text-right"
+              >
+                HDMI &bull; Thunderbolt 4 &bull; SDXC
+              </motion.div>
+            </>
+          )}
+        </div>
+
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {features.map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 + (i * 0.1) }}
+              className="bg-[#1d1d1f]/50 backdrop-blur-md border border-white/5 p-8 rounded-3xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-all duration-300"
+            >
+              <div className="mb-4">{feature.icon}</div>
+              <h3 className="text-white text-xl font-bold mb-2">{feature.title}</h3>
+              <p className="text-[#86868b]">{feature.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+
+      </motion.div>
     </section>
   );
 }

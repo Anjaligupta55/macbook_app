@@ -52,13 +52,13 @@ export default function ScrollAnimation() {
 
     const handleScroll = () => {
       if (!containerRef.current) return;
-      
+
       const { top, height } = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
+
       const scrollDistance = -top;
       const scrollableDistance = height - windowHeight;
-      
+
       let p = scrollDistance / scrollableDistance;
       targetProgress = Math.max(0, Math.min(1, p));
     };
@@ -67,7 +67,7 @@ export default function ScrollAnimation() {
     const smoothUpdate = () => {
       // Lerp for smoothness
       currentProgress += (targetProgress - currentProgress) * 0.1;
-      
+
       // Stop updating if it's very close
       if (Math.abs(targetProgress - currentProgress) > 0.0001) {
         setProgress(currentProgress);
@@ -77,7 +77,7 @@ export default function ScrollAnimation() {
             TOTAL_FRAMES - 1,
             Math.floor(currentProgress * TOTAL_FRAMES)
           );
-          
+
           const ctx = canvasRef.current.getContext('2d');
           if (ctx && images[frameIndex]) {
             ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -85,14 +85,14 @@ export default function ScrollAnimation() {
           }
         }
       }
-      
+
       animationFrameId = requestAnimationFrame(smoothUpdate);
     };
 
     window.addEventListener('scroll', handleScroll);
     handleScroll();
     animationFrameId = requestAnimationFrame(smoothUpdate);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(animationFrameId);
@@ -105,7 +105,7 @@ export default function ScrollAnimation() {
       if (canvasRef.current) {
         canvasRef.current.width = window.innerWidth;
         canvasRef.current.height = window.innerHeight;
-        
+
         // Redraw current frame
         if (images.length > 0) {
           const frameIndex = Math.min(TOTAL_FRAMES - 1, Math.floor(progress * TOTAL_FRAMES));
@@ -129,35 +129,35 @@ export default function ScrollAnimation() {
             <div className="text-white text-xl animate-pulse">Loading frames...</div>
           </div>
         )}
-        <canvas 
+        <canvas
           ref={canvasRef}
           className="w-full h-full object-cover z-0 opacity-100"
         />
 
         {/* Text Overlays */}
-        <div className={`absolute inset-x-0 top-[15%] text-center transition-all duration-700 z-10 ${progress >= 0.1 && progress < 0.25 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Supercharged by M3 Pro</h2>
-          <p className="text-xl text-gray-200 drop-shadow-lg">The most advanced chips ever built for a personal computer.</p>
-        </div>
-        
-        <div className={`absolute inset-x-0 top-[30%] text-center transition-all duration-700 z-10 ${progress >= 0.25 && progress < 0.45 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Up to 22 hours battery life</h2>
-          <p className="text-xl text-gray-200 drop-shadow-lg">Go all day. And all night.</p>
+        <div className={`absolute inset-x-0 px-6 top-[15%] text-center transition-all duration-700 z-10 ${progress >= 0.1 && progress < 0.25 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Supercharged by M3 Pro</h2>
+          <p className="text-lg md:text-xl text-gray-200 drop-shadow-lg">The most advanced chips ever built for a personal computer.</p>
         </div>
 
-        <div className={`absolute inset-x-0 top-[50%] text-center transition-all duration-700 z-10 ${progress >= 0.45 && progress < 0.65 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Liquid Retina XDR display</h2>
-          <p className="text-xl text-gray-200 drop-shadow-lg">The best display ever in a laptop.</p>
+        <div className={`absolute inset-x-0 px-6 top-[30%] text-center transition-all duration-700 z-10 ${progress >= 0.25 && progress < 0.45 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Up to 22 hours battery life</h2>
+          <p className="text-lg md:text-xl text-gray-200 drop-shadow-lg">Go all day. And all night.</p>
         </div>
 
-        <div className={`absolute inset-x-0 top-[70%] text-center transition-all duration-700 z-10 ${progress >= 0.65 && progress < 0.85 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Pro connectivity, everywhere</h2>
-          <p className="text-xl text-gray-200 drop-shadow-lg">More ports. More possibilities.</p>
+        <div className={`absolute inset-x-0 px-6 top-[50%] text-center transition-all duration-700 z-10 ${progress >= 0.45 && progress < 0.65 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Liquid Retina XDR display</h2>
+          <p className="text-lg md:text-xl text-gray-200 drop-shadow-lg">The best display ever in a laptop.</p>
         </div>
 
-        <div className={`absolute inset-x-0 top-[85%] text-center transition-all duration-700 z-10 ${progress >= 0.85 && progress < 0.98 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Built for what&apos;s next</h2>
-          <p className="text-xl text-gray-200 drop-shadow-lg">The ultimate pro laptop.</p>
+        <div className={`absolute inset-x-0 px-6 top-[70%] text-center transition-all duration-700 z-10 ${progress >= 0.65 && progress < 0.85 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Pro connectivity, everywhere</h2>
+          <p className="text-lg md:text-xl text-gray-200 drop-shadow-lg">More ports. More possibilities.</p>
+        </div>
+
+        <div className={`absolute inset-x-0 px-6 top-[85%] text-center transition-all duration-700 z-10 ${progress >= 0.85 && progress < 0.98 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">Built for what&apos;s next</h2>
+          <p className="text-lg md:text-xl text-gray-200 drop-shadow-lg">The ultimate pro laptop.</p>
         </div>
       </div>
     </section>
